@@ -33,16 +33,12 @@ export default function Sidebar({children}) {
       icon: <MdOutlineHealthAndSafety />,
     },
     {
-      path: "/cards",
-      name: "Cards",
-      icon: <BsCreditCard2BackFill />,
-    },
-    {
       path: "/",
       name: "Logout",
       icon: <BiLogOut />,
     },
   ];
+
 
   return (
     <div className="con">

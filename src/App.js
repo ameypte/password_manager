@@ -51,14 +51,6 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/cards",
-    element: (
-      <Sidebar>
-        <Cards />
-      </Sidebar>
-    ),
-  },
-  {
     path: "/*",
     element: <h1>404 Page Not found</h1>,
   },
