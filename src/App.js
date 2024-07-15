@@ -7,7 +7,6 @@ import Sidebar from "./components/Sidebar";
 import AddPassword from "./pages/AddPassword.jsx";
 import PassGene from "./pages/PassGene.jsx";
 import PassHealth from "./pages/PassHealth.jsx";
-import Cards from "./pages/Cards.jsx";
 
 const router = createBrowserRouter([
   {

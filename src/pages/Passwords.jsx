@@ -7,11 +7,6 @@ import "firebase/compat/database";
 import { BsFillUnlockFill, BsFillLockFill } from "react-icons/bs";
 import { FiUpload } from "react-icons/fi";
 import { AiFillDelete, AiFillSave } from "react-icons/ai";
-import {
-    simpleColumnarTranspositionDecrypt,
-    multipleColumnarTranspositionDecrypt,
-    railFenceDecrypt,
-} from "../components/decryption";
 
 export default function Dashboard() {
     const isUserLoggedIn = isLoggedIn();
@@ -42,17 +37,46 @@ export default function Dashboard() {
 
             for (let id in data) {
                 if (data[id].encryptionType === "Simple-columnar") {
-                    decryptedPasswords.push(
-                        simpleColumnarTranspositionDecrypt(data[id].password,"1234")
-                    );
-                } else if (data[id].encryptionType === "Multiple-columnar") {
-                    decryptedPasswords.push(
-                        multipleColumnarTranspositionDecrypt(data[id].password, ["123", "1234", "123", "1234"])
-                    );
-                } else if (data[id].encryptionType === "Rail-fence") {
-                    decryptedPasswords.push(
-                        railFenceDecrypt(data[id].password, 3)
-                    );
+                    const data1 = { ciphertext: data[id].password }
+                    fetch("http://localhost:5000/simplecolumnardecrypt", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(data1),
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            decryptedPasswords.push(data.plaintext);
+                        });
+                }
+                else if (data[id].encryptionType === "Multiple-columnar") {
+                    const data1 = { ciphertext: data[id].password }
+                    fetch("http://localhost:5000/multiplecolumnardecrypt", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(data1),
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            decryptedPasswords.push(data.plaintext);
+                        });
+                }
+                else if (data[id].encryptionType === "Rail-fence") {
+                    const data1 = { cipher: data[id].password }
+                    fetch("http://localhost:5000/railfencedecrypt", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(data1),
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            decryptedPasswords.push(data.plaintext);
+                        });
                 } else {
                     decryptedPasswords.push(data[id].password);
                 }

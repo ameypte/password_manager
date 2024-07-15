@@ -3,12 +3,6 @@ import isLoggedIn from "../components/isLoggedIn";
 import firebaseConfig from "../config/firebaseConfig";
 import firebase from "firebase/compat/app";
 import "firebase/compat/database";
-import {
-    simpleColumnarTransposition,
-    multipleColumnarTransposition,
-    railFence,
-} from "../components/encryption";
-
 firebase.initializeApp(firebaseConfig);
 
 export default function AddPassword() {
@@ -17,8 +11,10 @@ export default function AddPassword() {
     const [password, setPassword] = useState("");
     const [keyWords, setKeyWords] = useState("");
     const [encryptionType, setEncryptionType] = useState("");
-    // Simpele Columnar Transposition, Multiple Columnar Transposition, Rail Fence.
+    // Simpele Columnar Transposition, Multiple Columnar Tranposition, Rail Fence.
     const [lastUpdated, setLastUpdated] = useState("");
+
+    const [data, setData] = useState([{}]);
 
     useEffect(() => {
         const isUserLoggedIn = isLoggedIn();
@@ -40,21 +36,76 @@ export default function AddPassword() {
 
         let encryptedPassword = password;
         if (encryptionType === "Simple-columnar") {
-            encryptedPassword = simpleColumnarTransposition(password);
-        } else if (encryptionType === "Multiple-columnar") {
-            encryptedPassword = multipleColumnarTransposition(password);
-        } else if (encryptionType === "Rail-fence") {
-            encryptedPassword = railFence(password);
+            const data = { message: password };
+            fetch("http://localhost:5000//simplecolumnar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    setData(data);
+                    console.log(data.cipher);
+                    encryptedPassword = data.cipher;
+                    database.push({
+                        website,
+                        username,
+                        password: encryptedPassword,
+                        keyWords,
+                        encryptionType,
+                        lastUpdated,
+                    });
+                });
+            // encryptedPassword = simpleColumnarTransposition(password, 4);
+        }else if(encryptionType === "Multiple-columnar"){
+            const data = { message: password };
+            fetch("http://localhost:5000//multiplecolumnar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    setData(data);
+                    console.log(data.cipher);
+                    encryptedPassword = data.cipher;
+                    database.push({
+                        website,
+                        username,
+                        password: encryptedPassword,
+                        keyWords,
+                        encryptionType,
+                        lastUpdated,
+                    });
+                });
+        }else if (encryptionType === "Rail-fence") {
+            const data = { message: password };
+            fetch("http://localhost:5000//railfence", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    setData(data);
+                    console.log(data.cipher);
+                    encryptedPassword = data.cipher;
+                    database.push({
+                        website,
+                        username,
+                        password: encryptedPassword,
+                        keyWords,
+                        encryptionType,
+                        lastUpdated,
+                    });
+                });
         }
-
-        database.push({
-            website,
-            username,
-            password: encryptedPassword,
-            keyWords,
-            encryptionType,
-            lastUpdated,
-        });
 
         alert("Password Added");
     };

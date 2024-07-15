@@ -1,30 +1,20 @@
-export const simpleColumnarTransposition = (text) => {
-  // split the text into an array of characters
-  let chars = text.split("");
-
-  // calculate the number of rows needed based on the length of the text
-  let numRows = Math.ceil(chars.length / 4);
-
-  // create a 2D array to hold the transposed characters
-  let transposed = [];
-  for (let i = 0; i < numRows; i++) {
-    transposed[i] = [];
+export const simpleColumnarTransposition = (plaintext, key) => {
+  const columns = [];
+  for (let i = 0; i < key; i++) {
+    columns[i] = [];
   }
 
-  // populate the transposed array
-  for (let i = 0; i < chars.length; i++) {
-    let row = Math.floor(i / numRows);
-    let col = i % numRows;
-    transposed[col][row] = chars[i];
+  for (let i = 0; i < plaintext.length; i++) {
+    const colIndex = i % key;
+    columns[colIndex].push(plaintext.charAt(i));
   }
 
-  // flatten the transposed array back into a string
-  let result = "";
-  for (let row of transposed) {
-    result += row.join("");
+  let ciphertext = "";
+  for (let i = 0; i < columns.length; i++) {
+    ciphertext += columns[i].join("");
   }
 
-  return result;
+  return ciphertext;
 };
 
 export const multipleColumnarTransposition = (text) => {

@@ -1,32 +1,28 @@
-export const simpleColumnarTranspositionDecrypt = (text, key) => {
-    let plainText = "";
-    const numOfColumns = Math.ceil(text.length / key.length);
-    const numOfRows = key.length;
-
-    const matrix = Array.from({ length: numOfRows }, () => []);
-
-    let k = 0;
-    for (let i = 0; i < numOfColumns; i++) {
-        for (let j = 0; j < numOfRows; j++) {
-            if (k < text.length) {
-                matrix[j][i] = text[k];
-                k++;
-            }
-        }
+export const simpleColumnarTranspositionDecrypt = (ciphertext, key) => {
+    const numRows = Math.ceil(ciphertext.length / key);
+    const numCols = key;
+    const numEmpty = numRows * numCols - ciphertext.length;
+  
+    let plaintext = "";
+    let col = 0;
+    let row = 0;
+  
+    for (let i = 0; i < ciphertext.length; i++) {
+      if (row === numRows - 1 && col >= numCols - numEmpty) {
+        col++;
+      }
+      const index = col * numRows + row;
+      plaintext += ciphertext.charAt(index);
+      col++;
+      if (col >= numCols) {
+        col = 0;
+        row++;
+      }
     }
-
-    const sortedKey = [...key].sort();
-    const colIndices = key.split("").map((char) => sortedKey.indexOf(char));
-
-    for (let i = 0; i < numOfRows; i++) {
-        for (let j = 0; j < numOfColumns; j++) {
-            plainText += matrix[i][colIndices[j]] || "";
-        }
-    }
-
-    return plainText;
-};
-
+  
+    return plaintext;
+  };  
+  
 export const multipleColumnarTranspositionDecrypt = (text, keys) => {
     let plainText = text;
 
