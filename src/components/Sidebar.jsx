@@ -20,7 +20,7 @@ export default function Sidebar({children}) {
     {
       path: "/addpassword",
       name: "Add Password",
-      icon: <MdPassword />,
+      icon: <MdPassword />, 
     },
     {
       path: "/passgen",
